@@ -1,22 +1,28 @@
 const { Schema, model } = require("mongoose");
+const { reactionSchema } = require("./Reaction.js");
 
 const thoughtSchema = new Schema(
   {
     thoughtText: {
       type: String,
-      required: true, // 1-280 characters
+      required: true,
+      minlength: 1,
+      maxlength: 280,
     },
     createdAt: {
       type: Date,
-      default: Date.now(), // format date helper
+      default: `${moment(Date.now()).format("MMM Do YYYY")} at ${moment(
+        Date.now()
+      ).format("hh a")}`,
     },
     userName: {
       type: String,
-      required: true, // user ref
+      required: true,
+      ref: "User.username", // user ref?
     },
     reactions: [
       {
-        reactionSchema, // import schema
+        reactionSchema,
       },
     ],
   },
@@ -35,4 +41,6 @@ userSchema.virtual("reactionCount", {
   count: true,
 });
 
-const Thoughts = model("Thought", thoughtSchema);
+const Thought = model("Thought", thoughtSchema);
+
+module.exports = Thought;

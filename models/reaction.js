@@ -1,4 +1,5 @@
-const { Schema, model } = require("mongoose");
+const { Schema } = require("mongoose");
+let moment = require("moment");
 
 const reactionSchema = new Schema({
   reactionId: {
@@ -7,11 +8,14 @@ const reactionSchema = new Schema({
   },
   reactionBody: {
     type: String,
-    required: true, // 280 max char
+    required: true,
+    maxlength: 280,
   },
   createdAt: {
     type: Date,
-    default: Date.now(), // format date helper
+    default: `${moment(Date.now()).format("MMM Do YYYY")} at ${moment(
+      Date.now()
+    ).format("hh a")}`, // format date helper Jun 10th, 2020 at 01:38pm
   },
 });
 
