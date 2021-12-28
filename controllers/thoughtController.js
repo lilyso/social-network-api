@@ -1,6 +1,20 @@
 const { Thought } = require("../models");
 
 module.exports = {
+  // Get all thoughts
+  gethoughts(req, res) {
+    Thought.find()
+      .then(async (thought) => {
+        const thoughtObj = {
+          user,
+        };
+        return res.json(thoughtObj);
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json(err);
+      });
+  },
   // Get a thought
   getSingleThought(req, res) {
     Thought.findOne({ _id: req.params.thoughtId })
