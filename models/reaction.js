@@ -11,6 +11,11 @@ const reactionSchema = new Schema({
     required: true,
     maxlength: 280,
   },
+  userName: {
+    type: String,
+    required: true,
+    ref: "User.username", // user ref?
+  },
   createdAt: {
     type: Date,
     default: `${moment(Date.now()).format("MMM Do YYYY")} at ${moment(
