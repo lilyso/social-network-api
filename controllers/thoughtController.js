@@ -1,12 +1,12 @@
-const { Thought } = require("../models");
+const { Thought } = require("../models/Thought.js");
 
 module.exports = {
   // Get all thoughts
-  gethoughts(req, res) {
+  getThoughts(req, res) {
     Thought.find()
       .then(async (thought) => {
         const thoughtObj = {
-          user,
+          thought,
         };
         return res.json(thoughtObj);
       })
@@ -30,7 +30,7 @@ module.exports = {
   createThought(req, res) {
     Thought.create({
       thoughText: req.body.thoughtText,
-      userName: req.body.userName,
+      thoughtName: req.body.thoughtName,
     })
       .then((thought) => res.json(thought))
       .catch((err) => {
@@ -47,6 +47,20 @@ module.exports = {
           : Reaction.deleteMany({ _id: { $in: thought.reactions } })
       )
       .then(() => res.json({ message: "Thought and Reactions deleted!" }))
+      .catch((err) => res.status(500).json(err));
+  },
+  // Update thought
+  updateThought(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+      .then((thought) =>
+        !thought
+          ? res.status(404).json({ message: "No thought with this id!" })
+          : res.json(thought)
+      )
       .catch((err) => res.status(500).json(err));
   },
 };

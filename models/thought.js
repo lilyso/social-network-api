@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { reactionSchema } = require("./Reaction.js");
+const reactionSchema = require("./Reaction.js");
 const moment = require("moment");
 
 const thoughtSchema = new Schema(
@@ -21,11 +21,7 @@ const thoughtSchema = new Schema(
       required: true,
       ref: "User.username", // user ref?
     },
-    reactions: [
-      {
-        reactionSchema,
-      },
-    ],
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -35,7 +31,7 @@ const thoughtSchema = new Schema(
   }
 );
 
-userSchema.virtual("reactionCount", {
+thoughtSchema.virtual("reactionCount", {
   ref: "Reaction",
   localField: "reactions",
   foreignField: "_id",

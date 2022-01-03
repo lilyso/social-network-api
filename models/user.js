@@ -35,7 +35,7 @@ const userSchema = new Schema(
 );
 
 userSchema.virtual("friendCount", {
-  ref: "User",
+  ref: "user",
   localField: "friends",
   foreignField: "_id",
   count: true,
