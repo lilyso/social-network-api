@@ -16,7 +16,7 @@ const userSchema = new Schema(
     thoughts: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Thoughts",
+        ref: "Thought",
       },
     ],
     friends: [
@@ -40,6 +40,13 @@ userSchema.virtual("friendCount", {
   foreignField: "_id",
   count: true,
 });
+
+// userSchema.virtual("Thoughts", {
+//   ref: "User",
+//   localField: "thoughts",
+//   foreignField: "userName",
+//   justOne: false, // for many-to-1 relationships
+// });
 
 // Initialize our User model
 const User = model("user", userSchema);

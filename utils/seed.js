@@ -8,7 +8,10 @@ connection.once("open", async () => {
   console.log("connected");
 
   const userData = [
-    { username: "HomerSimpson", email: "homer_smrt@yahoo.com" },
+    {
+      username: "HomerSimpson",
+      email: "homer_smrt@yahoo.com",
+    },
     { username: "LisaS", email: "lisa_simpson@gmail.com" },
     { username: "MargieS", email: "smarge@yahoo.com" },
     { username: "bartman", email: "eatmyshorts@gmail.com" },
@@ -48,12 +51,44 @@ connection.once("open", async () => {
   // Add users to the collection and await the results
   await User.collection.insertMany(userData);
 
-  // Add users to the collection and await the results
-  await Thought.collection.insertMany(thoughtData);
+  let user;
+  let newThought;
+  for (let thought of thoughtData) {
+    console.log("Searching for ", thought.userName);
+    user = await User.findOne({ username: thought.userName });
+    if (!user) {
+      console.log("something went wrong");
+      exit();
+    } else {
+      console.log("Found", user.username, user.thoughts);
+    }
+    newThought = await Thought.collection.insertOne(thought);
 
+    await user.thoughts.push(newThought.insertedId);
+    try {
+      await user.save();
+      console.log("saved", user);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const newUsers = await User.find();
+
+  let friends;
+  let friendsIds;
+  for (let thisUser of newUsers) {
+    friends = await User.find({ _id: { $nin: [thisUser._id] } });
+    friendsIds = friends.map((item) => item._id);
+    thisUser.friends = friendsIds;
+    await thisUser.save();
+    // console.log("user", thisUser);
+  }
+
+  // Add users to the collection and await the results
+  // const t = await Thought.collection.insertMany(thoughtData);
+  // console.log("results", t);
   // Log out the seed data to indicate what should appear in the database
-  console.table(User);
-  console.table(Thought);
   console.info("Seeding complete! 🌱");
   process.exit(0);
 });
