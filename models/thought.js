@@ -13,9 +13,8 @@ const thoughtSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      default: `${moment(Date.now()).format("MMM Do YYYY")} at ${moment(
-        Date.now()
-      ).format("hh a")}`,
+      default: Date.now, // format date helper Jun 10th, 2020 at 01:38pm
+      get: (createdAtVal) => formatDate(createdAtVal),
     },
     userName: {
       type: String,
