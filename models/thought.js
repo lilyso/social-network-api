@@ -32,11 +32,8 @@ const thoughtSchema = new Schema(
   }
 );
 
-thoughtSchema.virtual("reactionCount", {
-  ref: "Reaction",
-  localField: "reactions",
-  foreignField: "_id",
-  count: true,
+thoughtSchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
 });
 
 const Thought = model("Thought", thoughtSchema);

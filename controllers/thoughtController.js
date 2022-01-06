@@ -17,7 +17,7 @@ module.exports = {
   },
   // Get a thought
   getSingleThought(req, res) {
-    Thought.findOne({ _id: req.params.thoughtId })
+    Thought.findById(req.params.thoughtId)
       .select("-__v")
       .then((thought) =>
         !thought
@@ -31,6 +31,7 @@ module.exports = {
     Thought.create({
       thoughText: req.body.thoughtText,
       thoughtName: req.body.thoughtName,
+      userName: req.body.userName,
     })
       .then((thought) => res.json(thought))
       .catch((err) => {
@@ -62,5 +63,25 @@ module.exports = {
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
+  },
+  // Delete a Reaction
+  async deleteReaction(req, res) {
+    console.log(req.params.reactionId);
+    // Thought.Reaction.remove({ reactionId: req.params.reactionId })
+    //   .then((reaction) =>
+    //     !reaction res.status(404).json({ message: "No reaction with that ID" })
+
+    //   .then(() => res.json({ message: "Reaction deleted!" }))
+    //   .catch((err) => res.status(500).json(err));
+    // Thought.reactions.
+    const thought = await Thought.findOne({ _id: req.params.thoughtId });
+    console.log(thought.reactions);
+    const del = await thought.reactions.pull(req.params.reactionId);
+
+    thought.save(function (err) {
+      if (err) return console.log(err.message);
+      console.log("the subdocs were removed");
+    });
+    res.json(true);
   },
 };

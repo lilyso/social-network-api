@@ -34,19 +34,9 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.virtual("friendCount", {
-  ref: "user",
-  localField: "friends",
-  foreignField: "_id",
-  count: true,
+userSchema.virtual("friendCount").get(function () {
+  return this.friends.length;
 });
-
-// userSchema.virtual("Thoughts", {
-//   ref: "User",
-//   localField: "thoughts",
-//   foreignField: "userName",
-//   justOne: false, // for many-to-1 relationships
-// });
 
 // Initialize our User model
 const User = model("user", userSchema);
